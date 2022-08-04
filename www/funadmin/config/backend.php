@@ -14,7 +14,7 @@ return [
     //是否演示站点
     'isDemo'=>0,
 
-    'backendEntrance' => '/35lWBjAU0f.php/',
+    'backendEntrance' => '/2KmvVJA8dU.php/',
 ];
 
 

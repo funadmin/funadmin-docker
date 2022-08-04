@@ -4,18 +4,19 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf088a20d170dc67ffd6c710e57135792
+class ComposerStaticInit48a30b7861d90263dc2da2d001ababbe
 {
     public static $files = array (
         '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '35fab96057f1bf5e7aba31a8a6d5fdde' => __DIR__ . '/..' . '/topthink/think-orm/stubs/load_stubs.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '23c18046f52bef3eea034657bafda50f' => __DIR__ . '/..' . '/symfony/polyfill-php81/bootstrap.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         '1bc034da698be0d15f839c8342e87418' => __DIR__ . '/..' . '/funadmin/fun-addons/src/helper.php',
-        '05a7c47247b92b341850677b92451bdb' => __DIR__ . '/..' . '/funadmin/fun-addons/src/form.php',
         'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         '1cfd2761b63b0a29ed23657ea394cb2d' => __DIR__ . '/..' . '/topthink/think-captcha/src/helper.php',
@@ -54,6 +55,7 @@ class ComposerStaticInitf088a20d170dc67ffd6c710e57135792
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Php72\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Contracts\\Translation\\' => 30,
             'Symfony\\Component\\VarDumper\\' => 28,
             'Symfony\\Component\\Translation\\' => 30,
@@ -124,18 +126,18 @@ class ComposerStaticInitf088a20d170dc67ffd6c710e57135792
         ),
         'think\\' => 
         array (
-            0 => __DIR__ . '/..' . '/topthink/framework/src/think',
+            0 => __DIR__ . '/..' . '/topthink/think-template/src',
             1 => __DIR__ . '/..' . '/topthink/think-helper/src',
-            2 => __DIR__ . '/..' . '/topthink/think-image/src',
-            3 => __DIR__ . '/..' . '/topthink/think-orm/src',
-            4 => __DIR__ . '/..' . '/topthink/think-queue/src',
-            5 => __DIR__ . '/..' . '/topthink/think-template/src',
+            2 => __DIR__ . '/..' . '/topthink/think-orm/src',
+            3 => __DIR__ . '/..' . '/topthink/framework/src/think',
+            4 => __DIR__ . '/..' . '/topthink/think-image/src',
+            5 => __DIR__ . '/..' . '/topthink/think-queue/src',
         ),
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
         ),
         'fun\\' => 
         array (
@@ -164,6 +166,10 @@ class ComposerStaticInitf088a20d170dc67ffd6c710e57135792
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Symfony\\Polyfill\\Ctype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
         'Symfony\\Contracts\\Translation\\' => 
         array (
@@ -264,10 +270,10 @@ class ComposerStaticInitf088a20d170dc67ffd6c710e57135792
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf088a20d170dc67ffd6c710e57135792::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf088a20d170dc67ffd6c710e57135792::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr0 = ComposerStaticInitf088a20d170dc67ffd6c710e57135792::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInitf088a20d170dc67ffd6c710e57135792::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit48a30b7861d90263dc2da2d001ababbe::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit48a30b7861d90263dc2da2d001ababbe::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr0 = ComposerStaticInit48a30b7861d90263dc2da2d001ababbe::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInit48a30b7861d90263dc2da2d001ababbe::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -19,19 +19,13 @@ require.config({
     ],
     baseUrl: BASE_URL,
     include: [
-        'css','treeGrid','tableSelect',
-        'treeTable','tableEdit','tableTree',
-        'iconPicker','iconFonts','tableFilter',
-        'toastr','step-lay','inputTags' ,'xmSelect',
-        'timeago','multiSelect','selectPlus','selectN','cityPicker',
-        'regionCheckBox','timePicker','croppers',
-        'md5','fun','fu','form','table','upload','addons'],
+        'css','treeGrid','tableSelect', 'treeTable','tableEdit','tableTree', 'iconPicker','iconFonts','tableFilter', 'toastr','step-lay','inputTags' ,'xmSelect', 'timeago','multiSelect','selectPlus','selectN','selectPage','cityPicker', 'regionCheckBox','timePicker','croppers', 'md5','fun','fu','form','table','upload','addons'],
     paths: {
         'lang'          : 'empty:',
         'jquery'        : 'plugins/jquery/jquery-3.6.0.min', // jquery
         //layui等组件
         'tableFilter'   : 'plugins/lay-module/tableFilter/tableFilter',
-        'treeGrid'      : 'plugins/lay-module/treeGrid/treeGrid',
+        'treeGrid'      : 'plugins/lay-module/treeGrid/treeGrid.min',
         'tableSelect'   : 'plugins/lay-module/tableSelect/tableSelect',
         'treeTable'     : 'plugins/lay-module/treeTable/treeTable',
         'tableEdit'     : 'plugins/lay-module/tableTree/tableEdit',
@@ -45,6 +39,7 @@ require.config({
         'multiSelect'   : 'plugins/lay-module/multiSelect/multiSelect',
         'selectPlus'    : 'plugins/lay-module/selectPlus/selectPlus',
         'selectN'       : 'plugins/lay-module/selectPlus/selectN',
+        'selectPage'    : 'plugins/lay-module/selectPage/selectpage.min',
         'cityPicker'    : 'plugins/lay-module/cityPicker/city-picker',
         'regionCheckBox': 'plugins/lay-module/regionCheckBox/regionCheckBox',
         'timePicker'    : 'plugins/lay-module/timePicker/timePicker',
@@ -101,9 +96,7 @@ require(["jquery"], function ($) {
         require(['fun','addons'], function (Fun) {
             $(function () {
                 if ('undefined' != typeof Config.autojs && Config.autojs) {
-                    console.log(Config.jspath)
                     require([BASE_URL+Config.jspath], function (Controller) {
-                        console.log(Config.autojs)
                         if (Controller.hasOwnProperty(Config.actionname)) {
                             Controller[Config.actionname]();
                         } else {

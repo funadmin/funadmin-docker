@@ -90,8 +90,8 @@ define(['jquery','table','upload','form'], function (undefined,Table,Upload,Form
                 limit: 15,
                 page: true
             });
-            let table = $('#' + Table.init.table_elem);
-            Table.api.bindEvent(table);
+
+            Table.api.bindEvent(Table.init);
         },
         add: function () {
             Controller.api.bindevent()
@@ -103,11 +103,10 @@ define(['jquery','table','upload','form'], function (undefined,Table,Upload,Form
             //选择文件
             function fileSelect(othis,type=1) {
                 var li = $('.box-body .file-list-item li.active');
+                var ids = [];
                 if(li.length ===0 && type===1){
-                    ids = [othis.parents('li').data('id')];
                     return ids;
                 }
-                var ids = [];
                 li.each(function () {
                     ids.push($(this).attr('data-id'));
                 });
@@ -307,7 +306,7 @@ define(['jquery','table','upload','form'], function (undefined,Table,Upload,Form
                 ,limit:param.limit?param.limit:12
                 ,limits: [12,24,72,108,1000]
                 // ,layout: ['prev', 'page', 'next', 'limit', 'refresh','count' ,'skip']
-                ,layout: ['prev', 'page', 'next', 'limit','refresh','count']
+                ,layout: ['prev', 'page', 'next', 'limit','refresh']
                 //跳转页码时调用
                 , jump: function (data, first) { //obj为当前页的属性和方法，第一次加载first为true
                     //         do something
@@ -340,7 +339,6 @@ define(['jquery','table','upload','form'], function (undefined,Table,Upload,Form
                     parent.layer.close(load);
                 }
                 , allDone: function (obj) { //当文件全部被提交后，才触发
-                    console.log(obj)
                     parent.layer.close(load);
                 }
                 , done: function (res) { //console.info(res);

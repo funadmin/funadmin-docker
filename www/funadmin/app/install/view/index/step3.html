@@ -1,9 +1,9 @@
 <!doctype html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <title>数据库配置 - FunAdmin开源系统安装</title>
-    <?php require_once ('step-base.html');?>
+    {include file="index/step-base"}
 </head>
 <body>
 <div class="layui-container">
@@ -16,16 +16,15 @@
                         <div class="layui-tabs-control">
                             <div class="layui-tab-item layui-show">
                                 <div class="layui-row" >
-                                    <form class="layui-form" action="./install?s=install" >
-                                        <?php if ($msg): ?>
-                                        <div class="layui-error">
-                                            <?php echo $msg; ?>
-                                        </div>
-                                        <?php endif; ?>
+                                    <form class="layui-form" action="{:url('index/step3')}" >
                                         <div class="layui-notice">
-                                            <div id="layui-error" style="display:none"></div>
-                                            <div id="layui-success" style="display:none"></div>
-                                            <div id="layui-warmtips" style="display:none"></div>
+                                            <div id="layui-error" class=" {if !file_exists($config['lockFile'])} layui-hide {/if}">
+                                            {if file_exists($config['lockFile'])}
+                                                已经安装了,如果需要重新安装请先删除public/install.lock
+                                            {/if}
+                                            </div>
+                                            <div id="layui-success" class="layui-hide"></div>
+                                            <div id="layui-warmtips"class="layui-hide" ></div>
                                         </div>
                                         <div id="fun-box" style="">
                                             <div class="layui-form-item form-main">
@@ -36,8 +35,8 @@
                                                     <div class="layui-form-item">
                                                         <label class="layui-form-label required">主机地址</label>
                                                         <div class="layui-input-block">
-                                                            <input type="text" name="hostname" class="layui-input" lay-verify="required"
-                                                                   placeholder="请输入主机地址、端口号可选" value="127.0.0.1">
+                                                            <input type="text" name="hostname" class="layui-input" lay-verify="required" title="请输入主机地址、端口号可选，容器名，docker版本请填写容器名 mysql"
+                                                                   placeholder="请输入主机地址、端口号可选，容器名，docker版本请填写容器名 mysql" value="127.0.0.1">
                                                         </div>
                                                     </div>
                                                     <div class="layui-form-item">
@@ -115,8 +114,8 @@
                                                 </div>
                                             </div>
                                             <div class="layui-form-item submit">
-                                                <a type="submit" class="layui-btn layui-btn-normal layui-btn-radius" href="./install.php?s=step2">上一步</a>
-                                                <button type="submit" class="layui-btn layui-btn-danger layui-btn-radius" lay-submit="" lay-filter="submit" style="text-align:center;">立即安装</button>
+                                                <a type="submit" class="layui-btn layui-btn-danger layui-btn-radius" href="/install.php/index/step2">上一步</a>
+                                                <button type="submit" class="layui-btn layui-btn-normal layui-btn-radius" lay-submit="" lay-filter="submit" style="text-align:center;">立即安装</button>
                                             </div>
                                         </div>
                                     </form>
@@ -135,31 +134,38 @@
     </div>
 <!--   -->
 </div>
-<script type="text/javascript" src="static/plugins/jquery/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
     layui.use(['layer','jquery','form'],function (res) {
         var layer = layui.layer,$ = layui.$,form=layui.form;
         //监听提交
         form.on('submit(submit)', function(data){
+            if ("{:file_exists($config['lockFile'])}")
+            {
+                layer.msg('已经安装了,如果需要重新安装请先删除public/install.lock');
+                return false;
+            }
             var that = $(this);
             var load = layer.load();
+            $('#layui-error').addClass('layui-hide')
             $('.layui-btn-radius').addClass('layui-hide');
             that.text('安装中...').prop('disabled', true);
             $.post('', data.field)
                 .done(function (res) {
-                    if (res.substr(0, 7) === 'success') {
-                        $('#layui-error').hide();
+                    if (res.code>0) {
+                        $('#layui-error').addClass('layui-hide');
+                        $('#layui-success').removeClass('layui-hide').text(res.msg);
                         $("#layui-fun-box").remove();
                         that.remove();
                         layer.msg('安装成功', {
                             icon: 1,
                             time: 2000 //2秒关闭（如果不配置，默认是3秒）
                         }, function(){
-                            window.location.href='./install.php?s=step4';
+                            window.location.href='/install.php/index/step4';
                         });
                     } else {
+                        $('#layui-error').removeClass('layui-hide')
+                        $('#layui-error').text(res.msg);
                         $('.layui-btn-radius').removeClass('layui-hide');
-                        $('#layui-error').show().text(res);
                         that.text('立即安装').prop('disabled', false);
                         $("html,body").animate({
                             scrollTop: 0

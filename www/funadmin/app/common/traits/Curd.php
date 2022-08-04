@@ -17,7 +17,7 @@ use think\facade\Cache;
 use think\facade\Db;
 use think\helper\Str;
 use think\model\concern\SoftDelete;
-use const http\Client\Curl\Versions\ARES;
+use think\validate\ValidateRule;
 
 /**
  * Trait Curd
@@ -25,6 +25,9 @@ use const http\Client\Curl\Versions\ARES;
  */
 trait Curd
 {
+
+    protected $selectpageFields = ['*'];
+
     use SoftDelete;
     /**
      * @NodeAnnotation(title="List")
@@ -32,8 +35,8 @@ trait Curd
      */
     public function index()
     {
-        if ($this->request->isAjax()) {
-            if ($this->request->param('selectFields')) {
+        if (request()->isAjax()) {
+            if (request()->param('selectFields')) {
                 $this->selectList();
             }
             list($this->page, $this->pageSize,$sort,$where) = $this->buildParames();
@@ -65,8 +68,8 @@ trait Curd
      */
     public function add()
     {
-        if ($this->request->isPost()) {
-            $post = $this->request->post();
+        if (request()->isPost()) {
+            $post = request()->post();
             foreach ($post as $k=>$v){
                 if(is_array($v)){
                     $post[$k] = implode(',',$v);
@@ -98,11 +101,11 @@ trait Curd
      */
     public function edit()
     {
-        $id = $this->request->param('id');
+        $id = request()->param('id');
         $list = $this->modelClass->find($id);
         if(empty($list)) $this->error(lang('Data is not exist'));
-        if ($this->request->isPost()) {
-            $post = $this->request->post();
+        if (request()->isPost()) {
+            $post = request()->post();
             $rule = [];
             try {
                 $this->validate($post, $rule);
@@ -130,7 +133,7 @@ trait Curd
      */
     public function delete()
     {
-        $ids =  $this->request->param('ids')?$this->request->param('ids'):$this->request->param('id');
+        $ids =  request()->param('ids')?request()->param('ids'):request()->param('id');
         if(empty($ids)) $this->error('id is not exist');
         if($ids=='all'){
             $list = $this->modelClass->withTrashed(true)->select();
@@ -155,7 +158,7 @@ trait Curd
      */
     public function destroy()
     {
-        $ids = $this->request->param('ids')?$this->request->param('ids'):$this->request->param('id');
+        $ids = request()->param('ids')?request()->param('ids'):request()->param('id');
         if(empty($ids)) $this->error('id is not exist');
         $list = $this->modelClass->whereIn($this->primaryKey, $ids)->select();
         if(empty($list)) $this->error('Data is not exist');
@@ -177,7 +180,7 @@ trait Curd
     {
         $model = $this->findModel($id);
         if(empty($model))$this->error('Data is not exist');
-        $sort = $this->request->param('sort');
+        $sort = request()->param('sort');
         $save = $model->sort = $sort;
         $save ? $this->success(lang('operation success')) :  $this->error(lang("operation failed"));
     }
@@ -190,7 +193,7 @@ trait Curd
         $field = input('field');
         $value = input('value');
         if($id){
-            if($this->allowModifyFields != ['*'] and !in_array($field,$this->allowModifyFields)){
+            if($this->allowModifyFields != ['*'] && !in_array($field,$this->allowModifyFields)){
                 $this->error(lang('Field Is Not Allow Modify：' . $field));
             }
             $model = $this->findModel($id);
@@ -215,7 +218,7 @@ trait Curd
      */
     public function recycle()
     {
-        if ($this->request->isAjax()) {
+        if (request()->isAjax()) {
             list($this->page, $this->pageSize,$sort,$where) = $this->buildParames();
             $list = $this->modelClass->onlyTrashed()
                 ->where($where)
@@ -234,7 +237,7 @@ trait Curd
      * @return bool
      */
     public function restore(){
-        $ids = $this->request->param('ids')?$this->request->param('ids'):$this->request->param('id');
+        $ids = request()->param('ids')?request()->param('ids'):request()->param('id');
         if(empty($ids)) $this->error('id is not exist');
         $list = $this->modelClass->onlyTrashed()->whereIn($this->primaryKey, $ids)->select();
         if(empty($list)) $this->error('Data is not exist');
@@ -254,7 +257,7 @@ trait Curd
      */
     public function import()
     {
-        $param = $this->request->param();
+        $param = request()->param();
         $res = hook('importExcel',$param);
         if($res){
             $this->success(lang('Oprate success'));
@@ -361,12 +364,15 @@ trait Curd
      */
     protected function selectList()
     {
+        if(input('selectFields') && input('showField')){
+            return $this->selectpage();
+        }
         $fields = input('selectFields');
         $tree = input('tree');
         $field = $fields['name'].','.$fields['value'];
         $parentField = input('parentField');
         list($this->page, $this->pageSize,$sort,$where) = $this->buildParames();
-        if($tree!='false' and $tree){
+        if($tree!='false' && $tree){
             $parentField = $parentField?:'pid';
             $field = $field.','.$parentField;
         }
@@ -375,14 +381,100 @@ trait Curd
             ->where($where)
             ->field($field)
             ->select();
-        if($tree!='false' and $tree){
+        if($tree!='false' && $tree){
             $list = $list?$list->toArray():[];
             $list = TreeHelper::getTree($list,$fields['name'],0,$parentField);
             rsort($list);
         }
         $this->success('','',$list);
     }
+    /**
+     *
+     * 当前方法只是一个比较通用的搜索匹配,请按需重载此方法来编写自己的搜索逻辑,$where按自己的需求写即可
+     * 这里示例了所有的参数，所以比较复杂，实现上自己实现只需简单的几行即可
+     *
+     */
+    protected function selectpage()
+    {
+        //设置过滤方法
+        request()->filter(['trim', 'strip_tags', 'htmlspecialchars']);
+        //搜索关键词,客户端输入以空格分开,这里接收为数组
+        $word = (array) request()->param("q_word/a");
+        $word        = array_filter(array_unique($word));
+        $searchTable        = request()->param("searchTable/s");
+        $class = "\\app\\common\\model\\".Str::studly($searchTable);
+        if($searchTable && class_exists($class)) $this->modelClass = new $class;
+        //当前页
+        $page = request()->param("pageNumber",1);
+        //分页大小
+        $pagesize = request()->param("pageSize",10);
+        //搜索条件
+        $andor = request()->param("andOr", 'AND', "strtoupper");
+        //排序方式
+        $orderby = (array) request()->param("orderBy/a");
+        //显示的字段
+        $field = request()->request("showField");
+        //主键
+        $primarykey = request()->param("keyField");
+        //主键值
+        $primaryvalue = request()->param("keyValue");
+        //搜索字段
+        $searchfield = (array) request()->param("selectFields/a")  ;
+        //是否返回树形结构
+        $istree = request()->param("isTree", 0);
 
+        $ishtml = request()->param("isHtml", 0);
+        if ($istree) {
+            $word     = [];
+            $pagesize = 999999;
+        }
+        $order = [];
+        foreach ($orderby as $k => $v) {
+            if($v=='false');continue;
+            $order[$v[0]] = $v[1];
+        }
+        $where  = []; $whereOr  = [];
+        //如果有primaryvalue,说明当前是初始化传值
+        if ($primaryvalue !== null) {
+            $where[]    = [$primarykey ,'in', explode(',', $primaryvalue)];
+            $pagesize = 99999;
+        } else {
+            $logic       = $andor == 'AND' ? '&' : '|';
+            $searchfield = is_array($searchfield) ? implode($logic, $searchfield) : $searchfield;
+            $searchfield = str_replace(',', $logic, $searchfield);
+            foreach ($word as $key => $val)  {
+                array_push($whereOr,[[$searchfield,'LIKE','%'.$val.'%']]);
+            }
+        }
+        $fields = is_array($this->selectpageFields) ? $this->selectpageFields : ($this->selectpageFields && $this->selectpageFields != '*' ? explode(',', $this->selectpageFields) : []);
+        if (!empty($whereOr)){
+            $list = $this->modelClass->whereOr($whereOr)->field($fields)->order($order)->paginate(['list_rows'=> $pagesize, 'page' => $page,]);
+        }else{
+            $list = $this->modelClass->where($where)->field($fields)->order($order)->paginate(['list_rows'=> $pagesize, 'page' => $page]);
+        }
+        $field = $field ?: 'title';
+        if ($list->count() > 0) {
+            $list = $list->toArray();
+            foreach ($list['data'] as $index => &$item) {
+                unset($item['password'], $item['token']);
+                $item[$primarykey] = isset($item[$primarykey]) ? $item[$primarykey] : '';
+                $item[$field]      = isset($item[$field]) ? $item[$field] : '';
+                $item['pid'] = isset($item['pid']) ? $item['pid'] : (isset($item['parent_id']) ? $item['parent_id'] : 0);
+            }
+            if ($istree && !$primaryvalue) {
+                $list =TreeHelper::getTree($list, $field);
+                if (!$ishtml) {
+                    foreach ($list as &$item) {
+                        $item = str_replace('|--', ' ', $item);
+                    }
+                    unset($item);
+                }
+            }
+        }
+        $result = ['data' => $list['data'], 'count' =>$list['total']];
+        //这里一定要返回有list这个字段,total是可选的,如果total<=list的数量,则会隐藏分页按钮
+        $this->success('ok','',$result);
+    }
 
     /**
      * 组合参数
@@ -396,14 +488,14 @@ trait Curd
         header("content-type:text/html;charset=utf-8"); //设置编码
         $searchFields = is_null($searchFields) ? $this->searchFields : $searchFields;
         $relationSearch = is_null($relationSearch) ? $this->relationSearch : $relationSearch;
-        $search = $this->request->get("search", '');
-        $searchName = $this->request->get("searchName", $searchFields);
-        $page = $this->request->param('page/d',1);
-        $limit = $this->request->param('limit/d',15) ;
-        $filters = $this->request->get('filter','{}') ;
-        $ops = $this->request->param('op','{}') ;
-        $sort = $this->request->get("sort", !empty($this->modelClass) && $this->modelClass->getPk() ? $this->modelClass->getPk() : 'id');
-        $order = $this->request->get("order", "DESC");
+        $search = request()->get("search", '');
+        $searchName = request()->get("searchName", $searchFields);
+        $page = request()->param('page/d',1);
+        $limit = request()->param('limit/d',15) ;
+        $filters = request()->get('filter','{}') ;
+        $ops = request()->param('op','{}') ;
+        $sort = request()->get("sort", !empty($this->modelClass) && $this->modelClass->getPk() ? $this->modelClass->getPk() : 'id');
+        $order = request()->get("order", "DESC");
 //        $filters = htmlspecialchars_decode(iconv('GBK','utf-8',$filters));
         $filters = htmlspecialchars_decode($filters);
         $filters = json_decode($filters,true);

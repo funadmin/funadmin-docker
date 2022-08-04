@@ -69,18 +69,6 @@ define(['jquery', 'table','tableSelect', 'upload', 'fu'], function($,Table, tabl
                             return '用户名不能全为数字';
                         }
                     },
-                    //layedit 编辑器同步
-                    layedit: function(value) {
-                        var list = $("*[lay-filter='editor']");
-                        if (list.length > 0) {
-                            layui.each(list, function() {
-                                if ($(this).data('editor') ==3) {
-                                    var id = $(this).prop('id');
-                                    return layui.layedit.sync(window['editor' + id])
-                                }
-                            })
-                        }
-                    },
                     pass: [/^[\S]{6,18}$/, '密码必须6到18位，且不能出现空格'],
                     zipcode: [/^\d{6}$/, "请检查邮政编码格式"],
                     chinese: [/^[\u0391-\uFFE5]+$/, "请填写中文字符"] //包含字母
@@ -218,12 +206,12 @@ define(['jquery', 'table','tableSelect', 'upload', 'fu'], function($,Table, tabl
              * @param option
              * @returns {boolean}
              */
-            closeCurrentOpen: function(option) {
+            closeOpen: function(option) {
                 option = option || {};
                 option.refreshTable = option.refreshTable || false;
                 option.refreshFrame = option.refreshFrame || false;
                 if (option.refreshTable === true) {
-                    option.refreshTable = Table.init.tableId;
+                    option.refreshTable = option.tableid ||  Table.init.tableId;
                 }
                 var index = parent.layui.layer.getFrameIndex(window.name);
                 if (index) {
@@ -265,7 +253,7 @@ define(['jquery', 'table','tableSelect', 'upload', 'fu'], function($,Table, tabl
                         res.msg = res.msg || 'success';
                         Fun.toastr.success(res.msg, function() {
                             // 返回页面
-                            Form.api.closeCurrentOpen({
+                            Form.api.closeOpen({
                                 refreshTable: refresh,
                                 refreshFrame: refresh
                             });
@@ -372,7 +360,7 @@ define(['jquery', 'table','tableSelect', 'upload', 'fu'], function($,Table, tabl
                                 var fileArr = [];
                                 var html = '';
                                 layui.each(data.data, function(index, val) {
-                                    if (uploadMime === 'image') {
+                                    if (uploadMime === 'images') {
                                         html += '<li><img lay-event="photos" class="layui-upload-img fl" width="150" src="' + val.path + '" alt=""><i class="layui-icon layui-icon-close" lay-event="upfileDelete" data-fileurl="' + val.path + '"></i></li>\n';
                                     } else if (uploadMime === 'video') {
                                         html += '<li><video controls class="layui-upload-img fl" width="150" src="' + val.path + '"></video><i class="layui-icon layui-icon-close" lay-event="upfileDelete" data-fileurl="' + val.path + '"></i></li>\n';
@@ -414,10 +402,9 @@ define(['jquery', 'table','tableSelect', 'upload', 'fu'], function($,Table, tabl
                 if (fileSelectList.length > 0) {
                     layui.each(fileSelectList, function(i, v) {
                         $(this).click(function(e){
-
                             var data = $(this).data();
                             if(typeof data.value == 'object') data = data.value;
-                            uploadType = data.type,
+                            uploadType = data.type,width = data.width||800,height = data.height||600
                                 uploadNum = data.num, uploadMime = data.mime,
                                 url  = data.selecturl, path = data.path;
                             uploadMime = uploadMime || '';
@@ -433,7 +420,8 @@ define(['jquery', 'table','tableSelect', 'upload', 'fu'], function($,Table, tabl
                             var parentiframe = Fun.api.checkLayerIframe();
                             options = {
                                 title:__('Filelist'),type:2,
-                                url: url, width: '970', height: '700', method: 'get', yes:  function (index, layero) {
+                                url: url, width: width, height: height, method: 'get',
+                                yes:  function (index, layero) {
                                     try {
                                         $(document).ready(function () {
                                             // 父页面获取子页面的iframe

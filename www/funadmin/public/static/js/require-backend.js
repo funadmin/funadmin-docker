@@ -19,18 +19,14 @@ require.config({
     ],
     baseUrl: BASE_URL,
     include: [
-        'css','treeGrid','tableSelect','treeTable','tableEdit','tableFilter',
-        'tableTree','iconPicker','iconFonts', 'toastr','step-lay','inputTags',
-        'timeago','multiSelect','cityPicker', 'selectPlus','selectN', 'xmSelect',
-        'regionCheckBox','timePicker','croppers',
-        'backend','md5','fun','fu','form','table','upload','addons'],
+        'css','treeGrid','tableSelect','treeTable','tableEdit','tableFilter','tableTree','iconPicker','iconFonts', 'toastr','step-lay','inputTags', 'timeago','multiSelect','cityPicker', 'selectPlus','selectN','selectPage','xmSelect', 'regionCheckBox','timePicker','croppers', 'backend','md5','fun','fu','form','table','upload','addons'],
     paths: {
         'lang'          : 'empty:',
         'jquery'        : 'plugins/jquery/jquery-3.6.0.min', // jquery
         //layui等组件
         // 'cardTable'     : 'plugins/lay-module/cardTable/cardTable',
         'tableFilter'   : 'plugins/lay-module/tableFilter/tableFilter',
-        'treeGrid'      : 'plugins/lay-module/treeGrid/treeGrid',
+        'treeGrid'      : 'plugins/lay-module/treeGrid/treeGrid.min',
         'tableSelect'   : 'plugins/lay-module/tableSelect/tableSelect',
         'treeTable'     : 'plugins/lay-module/treeTable/treeTable',
         'tableEdit'     : 'plugins/lay-module/tableTree/tableEdit',
@@ -44,13 +40,14 @@ require.config({
         'multiSelect'   : 'plugins/lay-module/multiSelect/multiSelect',
         'selectPlus'    : 'plugins/lay-module/selectPlus/selectPlus',
         'selectN'       : 'plugins/lay-module/selectPlus/selectN',
+        'selectPage'    : 'plugins/lay-module/selectPage/selectpage.min',
         'cityPicker'    : 'plugins/lay-module/cityPicker/city-picker',
         'regionCheckBox': 'plugins/lay-module/regionCheckBox/regionCheckBox',
         'timePicker'    : 'plugins/lay-module/timePicker/timePicker',
         'croppers'      : 'plugins/lay-module/cropper/croppers',
         'xmSelect'      : 'plugins/lay-module/xm-select/xm-select',
-        'backend'       : 'plugins/lay-module/fun/backend'+(Config.site.app_debug?'':'.min'), // fun后台扩展
         'md5'           : 'plugins/lay-module/md5/md5.min', // 后台扩展
+        'backend'       : 'js/backend'+(Config.site.app_debug?'':'.min'), // fun后台扩展
         'fun'           : 'js/fun', // api扩展
         'fu'            : 'js/require-fu',
         'table'         : 'js/require-table',

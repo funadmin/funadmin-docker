@@ -1,5 +1,11 @@
 <BR>
-
+<h3 align="center"> <a href="https://www.gitee.com/funadmin/funadmin-docker">
+funadmin docker 版本请移步docker仓库
+    </a></h3>
+<h3 align="center"> <a href="https://www.gitee.com/funadmin/webadmin">
+funadmin前端和webman开发的后台管理系统
+    </a></h3>
+    
 <h3 align="center">为梦想而创作：FunAdmin开发框架系统 系统支持PHP8.X</h3>
 
 <h4 align="center">开源不易，您可以点右上角 "Star" 支持一下 谢谢！</h4>
@@ -49,7 +55,7 @@ FunAdmin 基于thinkphp6.X +Layui2.7.*+requirejs开发权限(RBAC)管理框架�
  + 内置`CURD` 命令行模式，帮助助您快速开发系统
  + 模块化：全新的架构和模块化的开发机制，便于灵活扩展和二次开发。
  + 强大的表单管理，只需要使用函数即可成就表单 
- + layui采用最新layui2.6.X 框架
+ + layui采用最新layui2.7.X 框架
  + 适用范围：可以开发OA、ERP、BPM、CRM、WMS、TMS、MIS、BI、电商平台后台、物流管理系统、快递管理系统、教务管理系统等各类管理软件。
  + require.js 模块化开发 一个命令即可打包js,css ; node r.js -o backend-build.js
  + restful api 接口,接口使用jwt接口验证等
@@ -86,14 +92,13 @@ FunAdmin 基于thinkphp6.X +Layui2.7.*+requirejs开发权限(RBAC)管理框架�
 * 系统名称：FunAdmin开发系统框架
 * 作者：FunAdmin
 * 官网网址：[http://www.funadmin.com/](http://www.funadmin.com/)
-
-[comment]: <> (* 文档网址：[http://docs.funadmin.com/]&#40;http://docs.funadmin.com/&#41;)
+* 文档网址：[http://doc.funadmin.com/](http://doc.funadmin.com)
 * 开源协议：Apache 2.0
 
 ## 鸣谢以下开源项目以及项目中用到的其他开源项目 （排名不分先后，）
 - [Thinkphp](http://thinkphp.cn)
 - [JQuery](http://jquery.com)
-- [Layui](http://www.layui.com)
+- [Layui](http://www.layuion.com)
 - [Requirejs](https://requirejs.org)
 
 ## 版权信息
@@ -101,7 +106,7 @@ FunAdmin 方便二次开发，您可以方便的使用到自己或企业的项�
 
 本项目包含的第三方源码和二进制文件之版权信息另行标注。
 
-版权所有Copyright © 2018-2021 by FunAdmin [www.FunAdmin.com](http://www.funadmin.com)
+版权所有Copyright © 2018-2030 by FunAdmin [www.FunAdmin.com](http://www.funadmin.com)
 
 All rights reserved。
 

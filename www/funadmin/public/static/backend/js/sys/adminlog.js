@@ -39,12 +39,13 @@ define(['jquery','table','form'], function (undefined,Table,Form) {
                 cols: [[
                     {type: "checkbox"},
                     {field: 'id', title: 'ID', sort: true, width: 80, search: false},
-                    {field: 'admin_id', title: __('Admin ID'), width: 80, sort: true},
+                    // {field: 'admin_id', title: __('Admin ID'), width: 80, sort: true},
                     {field: 'username', title: __('Admin Username'), width: 150, sort: true},
+                    {field: 'title', title: __('Log Title'), width: 150, sort: true,},
                     {field: 'method', title: __('Method'), width: 150, sort: true},
                     {field: 'url', title: __('Log Addr'), sort: true,},
                     {field: 'post_data', title: __('Log Content'), width: 150, sort: true,},
-                    {field: 'title', title: __('Log Title'), width: 150, sort: true,},
+                    {field: 'get_data', title: __('Log Content'), width: 150, sort: true,},
                     {field: 'agent', title: __('Log Agent'), width: 120, sort: true,},
                     {field: 'ip', title: 'Ip', width: 80},
                     {field: 'create_time', title: __('CreateTime'), width: 180, search: 'range'},
@@ -61,8 +62,8 @@ define(['jquery','table','form'], function (undefined,Table,Form) {
                 limit: 15,
                 page: true
             });
-            let table = $('#' + Table.init.table_elem);
-            Table.api.bindEvent(table);
+
+            Table.api.bindEvent(Table.init);
         },
         edit:function (){
             Controller.api.bindevent();
